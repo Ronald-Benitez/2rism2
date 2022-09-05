@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tworism.Adapter.RecentsDataAdapter;
 import com.example.tworism.MainActivity;
+import com.example.tworism.Models.RecentsModel;
+import com.example.tworism.Models.TravelHistoryModel;
 import com.example.tworism.R;
 import com.example.tworism.Retrofit.RecentsDataModel;
 import com.example.tworism.Retrofit.RecentsInterface;
@@ -47,7 +49,7 @@ public class MainClientActivity extends AppCompatActivity {
     String UserId,UserName;
     Spinner spFilterKey;
     EditText etFilterValue;
-    Button btnFind;
+    Button btnFind, btnHistory;
 
 
     @Override
@@ -62,6 +64,7 @@ public class MainClientActivity extends AppCompatActivity {
         spFilterKey = findViewById(R.id.spFilter);
         etFilterValue = findViewById(R.id.editTextTextPersonName);
         btnFind = findViewById(R.id.btnFind);
+        btnHistory = findViewById(R.id.btnHistory);
 
         String [] filterValue = {"Filtro a aplicar","Origen","Destino","Fecha","Precio"};
         String [] filterKeys ={"","TravelOrigin","TravelDestination","TravelDate","TravelPrice"};
@@ -148,6 +151,13 @@ public class MainClientActivity extends AppCompatActivity {
             }
         });
 
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadHistory();
+            }
+        });
+
     }
 
     private  void setRecentDateRecycler(){
@@ -190,5 +200,46 @@ public class MainClientActivity extends AppCompatActivity {
         intent.putExtra("UserName", UserName);
         startActivity(intent);
         finish();
+    }
+
+    public void loadHistory(){
+        TravelInterface travelInterface = RetrofitClient.getClient().create(TravelInterface.class);
+        try {
+            Call<List<TravelHistoryModel>> call = travelInterface.getHistory(UserId);
+            call.enqueue(new Callback<List<TravelHistoryModel>>() {
+                @Override
+                public void onResponse(Call<List<TravelHistoryModel>> call, Response<List<TravelHistoryModel>> response) {
+                    if(response.isSuccessful()){
+                        List<TravelHistoryModel> travelHistoryModelList = response.body();
+                        try {
+                            if (travelHistoryModelList.size() > 0) {
+                                List<RecentsDataModel> recentsDataModelList = new ArrayList<>();
+                                for (int i = 0; i < travelHistoryModelList.size(); i++) {
+                                    recentsDataModelList.add(travelHistoryModelList.get(i).getTravel());
+                                }
+                                recentsAdapter = new RecentsDataAdapter(recentsDataModelList, UserId, UserName);
+                                recentRecycler.setAdapter(recentsAdapter);
+                                Toast.makeText(MainClientActivity.this, "Historial obtenido", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainClientActivity.this, "No se encontraron viajes", Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            Toast.makeText(MainClientActivity.this, "No se encontraron viajes", Toast.LENGTH_SHORT).show();
+                            Log.e("Error",e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TravelHistoryModel>> call, Throwable t) {
+                    Toast.makeText(MainClientActivity.this, "No se encontraron viajes", Toast.LENGTH_SHORT).show();
+                    Log.e("Error",t.getMessage());
+                }
+            });
+        }catch (Exception e){
+            Toast.makeText(MainClientActivity.this, "No se encontraron viajes", Toast.LENGTH_SHORT).show();
+            Log.e("Error",e.getMessage());
+            reloadActivity();
+        }
     }
 }

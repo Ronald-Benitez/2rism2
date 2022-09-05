@@ -1,5 +1,6 @@
 package com.example.tworism.Retrofit;
 
+import com.example.tworism.Models.TravelHistoryModel;
 import com.example.tworism.Models.TravelModel;
 import com.example.tworism.Models.TravelRegister;
 
@@ -43,5 +44,8 @@ public interface TravelInterface {
     @POST("/api/travels/filter")
     Call<List<RecentsDataModel>> filterTravel(@Field(("filter")) String filter,
                                               @Field(("value")) String value);
+
+    @GET("/api/travelRegister/simplify/{id}")
+    Call<List<TravelHistoryModel>> getHistory(@Path("id") String id);
 
 }
