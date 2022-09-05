@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.example.tworism.Provider.ProviderMainActivity;
 import com.example.tworism.Retrofit.UserModel;
 import com.example.tworism.Retrofit.VehicleInterface;
 import com.example.tworism.Retrofit.VehicleModel;
@@ -21,8 +22,9 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 
 public class RegistrarVehiculo extends AppCompatActivity {
-    Button btnRegister;
+    Button btnRegister, btnBack;
     EditText TipoV, CapacidadV, PlacaV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +32,10 @@ public class RegistrarVehiculo extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String UserId = bundle.getString("UserId");
         String UserName = bundle.getString("UserName");
+        String UserVerified = bundle.getString("UserVerified");
 
         btnRegister = findViewById(R.id.btnRegistrarVe);
+        btnBack = findViewById(R.id.btnBack);
         TipoV = findViewById(R.id.TVehiculo);
         CapacidadV = findViewById(R.id.CapacidadV);
         PlacaV = findViewById(R.id.NumeroPlaca);
@@ -62,6 +66,17 @@ public class RegistrarVehiculo extends AppCompatActivity {
                         Toast.makeText(RegistrarVehiculo.this, "Error al registrar", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegistrarVehiculo.this, ProviderMainActivity.class);
+                intent.putExtra("UserId",UserId);
+                intent.putExtra("UserName",UserName);
+                intent.putExtra("UserVerified",UserVerified);
+
+                startActivity(intent);
             }
         });
     }
