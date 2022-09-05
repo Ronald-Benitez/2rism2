@@ -2,6 +2,7 @@ package com.example.tworism.Adapter;
 
 import android.app.AlertDialog;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,18 +78,22 @@ public class TravelSimplifyAdapter extends RecyclerView.Adapter<TravelSimplifyAd
                     builder.setTitle("Eliminar viaje");
                     builder.setMessage("¿Está seguro que desea eliminar este viaje?");
                     builder.setPositiveButton("Si", (dialog, which) -> {
-                        Call<List<String>> call = travelInterface.deleteTravel(tvTravelId.getText().toString());
-                        call.enqueue(new Callback<List<String>>() {
+                        Call<Integer> call = travelInterface.deleteTravel(tvTravelId.getText().toString());
+                        call.enqueue(new Callback<Integer>() {
                             @Override
-                            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                                if (response.isSuccessful())
-                                {
+                            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                if(response.body()==1){
                                     Toast.makeText(itemView.getContext(), "Viaje eliminado", Toast.LENGTH_SHORT).show();
+                                    recentsDataModelList.remove(getAdapterPosition());
+                                    notifyItemRemoved(getAdapterPosition());
+                                }else {
+                                    Toast.makeText(itemView.getContext(), "Error al eliminar viaje", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override
-                            public void onFailure(Call<List<String>> call, Throwable t) {
+                            public void onFailure(Call<Integer> call, Throwable t) {
                                 Toast.makeText(itemView.getContext(), "Error al eliminar viaje", Toast.LENGTH_SHORT).show();
+                                Log.d("Error",t.getMessage());
                             }
                         });
                     });

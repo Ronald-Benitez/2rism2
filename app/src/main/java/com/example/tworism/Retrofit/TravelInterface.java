@@ -53,6 +53,6 @@ public interface TravelInterface {
     Call<List<RecentsDataModel>> getUserTravel(@Path("id") String id);
 
     @DELETE("/api/travels/{id}")
-    Call<List<String>> deleteTravel(@Path("id") String id);
+    Call<Integer> deleteTravel(@Path("id") String id);
 
 }
