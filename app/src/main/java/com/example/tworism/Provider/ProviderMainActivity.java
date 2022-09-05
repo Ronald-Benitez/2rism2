@@ -17,7 +17,7 @@ import com.example.tworism.Users.ProfileActivity;
 
 public class ProviderMainActivity extends AppCompatActivity {
 
-    Button btnAddVehicle,btnListarVehiculo,btnOrganizarViaje,btnProfile;
+    Button btnAddVehicle,btnListarVehiculo,btnOrganizarViaje,btnProfile,btnListTravels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class ProviderMainActivity extends AppCompatActivity {
         btnListarVehiculo = findViewById(R.id.btnListarVehiculo);
         btnOrganizarViaje = findViewById(R.id.btnOrganizarViaje);
         btnProfile = findViewById(R.id.btnProfile);
+        btnListTravels = findViewById(R.id.btnListTravels);
 
 
         if(!UserVerified){
@@ -47,6 +48,17 @@ public class ProviderMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProviderMainActivity.this, RegistrarVehiculo.class);
+                intent.putExtra("UserId", UserId);
+                intent.putExtra("UserName", UserName);
+                intent.putExtra("UserVerified", UserVerified.toString());
+                startActivity(intent);
+            }
+        });
+
+        btnListTravels.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProviderMainActivity.this, ListTravels.class);
                 intent.putExtra("UserId", UserId);
                 intent.putExtra("UserName", UserName);
                 intent.putExtra("UserVerified", UserVerified.toString());

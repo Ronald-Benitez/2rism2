@@ -16,6 +16,9 @@
         android:theme="@style/Theme.TwoRism"
         tools:targetApi="31">
         <activity
+            android:name=".Provider.ListTravels"
+            android:exported="false" />
+        <activity
             android:name=".Activities.PasareraDePagos"
             android:exported="false" />
         <activity

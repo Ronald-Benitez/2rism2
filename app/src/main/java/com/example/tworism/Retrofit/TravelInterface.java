@@ -7,6 +7,7 @@ import com.example.tworism.Models.TravelRegister;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -47,5 +48,11 @@ public interface TravelInterface {
 
     @GET("/api/travelRegister/simplify/{id}")
     Call<List<TravelHistoryModel>> getHistory(@Path("id") String id);
+
+    @GET("/api/travels/simplify/ByUserId/{id}")
+    Call<List<RecentsDataModel>> getUserTravel(@Path("id") String id);
+
+    @DELETE("/api/travels/{id}")
+    Call<List<String>> deleteTravel(@Path("id") String id);
 
 }
