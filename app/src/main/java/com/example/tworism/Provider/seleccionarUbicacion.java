@@ -108,7 +108,8 @@ public class seleccionarUbicacion extends FragmentActivity implements GoogleMap.
 
 
 
-        mMap.setMinZoomPreference(14);
+        mMap.setMaxZoomPreference(14);
+        mMap.setMinZoomPreference(8);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Origen));
         //Tocar el marcador
         googleMap.setOnMarkerClickListener(this);
