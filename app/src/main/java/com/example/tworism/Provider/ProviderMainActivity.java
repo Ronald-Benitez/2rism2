@@ -92,6 +92,7 @@ public class ProviderMainActivity extends AppCompatActivity {
 
     public void onBackPressed(){
         Intent intent = new Intent(ProviderMainActivity.this, MainActivity.class);
+
         startActivity(intent);
         finish();
     }

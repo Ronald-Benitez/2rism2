@@ -97,6 +97,9 @@ public class OrganizarViaje extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OrganizarViaje.this, ProviderMainActivity.class);
+                intent.putExtra("UserId", UserId);
+                intent.putExtra("UserName", UserName);
+                intent.putExtra("UserVerified", UserVerified.toString());
                 startActivity(intent);
                 finish();
             }
