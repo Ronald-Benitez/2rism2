@@ -82,6 +82,7 @@ public class MainClientActivity extends AppCompatActivity {
 
 
         fetchRecentData();
+        setRecentDateRecycler();
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,7 @@
 package com.example.tworism.Activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,9 +25,9 @@ public class PasareraDePagos extends AppCompatActivity {
         btnRealizarPago.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Intent intent = new Intent(PasareraDePagos.this, ProfileActivity.class);
+               Intent intent = new Intent(PasareraDePagos.this, MainClientActivity.class);
                 Toast.makeText(PasareraDePagos.this, "Pago Realizado con exito", Toast.LENGTH_SHORT).show();
-               // startActivity(intent);
+                startActivity(intent);
             }
         });
 
