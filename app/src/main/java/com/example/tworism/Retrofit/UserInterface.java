@@ -23,6 +23,12 @@ public interface UserInterface {
     @GET("/api/users/calification/{UserId}")
     Call<UserModel> getUser(@Path("UserId") String UserId);
 
+    @FormUrlEncoded
+    @POST("/api/users/calification")
+    Call<UserModel> makeCalification(@Field("UserId") String UserId, @Field("UserCalification") String UserCalification);
+
     @PUT("/api/users/{UserId}")
     Call<List<Integer>> updateUser(@Path("UserId") String UserId, @Body Map<String, String> body);
+
+
 }
