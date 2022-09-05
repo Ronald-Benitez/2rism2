@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.example.tworism.Retrofit.TravelInterface;
 import com.example.tworism.Retrofit.UserInterface;
 import com.example.tworism.Retrofit.UserModel;
 import com.example.tworism.RetrofitClient;
+import com.example.tworism.Users.RegisterActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -25,10 +28,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DetailsActivity extends AppCompatActivity {
+
+    RatingBar ratingStars;
+    float myRating=0;
+
+    ImageView ImageViewReturn;
     GoogleMap googleMap;
     MapView mapaMP;
     Button btnReserve;
@@ -45,23 +56,86 @@ public class DetailsActivity extends AppCompatActivity {
         UserName = extras.getString("UserName");
         TravelId = extras.getString("TravelId");
 
+        ratingStars = findViewById(R.id.ratingBar2);
+
+
+        ImageViewReturn = findViewById(R.id.imageViewReturn);
         txtTravelDestination = findViewById(R.id.textView8);
         txtTravelOrigin = findViewById(R.id.textView21);
         txtTravelDate = findViewById(R.id.textView14);
         txtTravelTime = findViewById(R.id.textView16);
         txtTravelPrice = findViewById(R.id.textView19);
-        txtTravelRating = findViewById(R.id.textView9);
+        txtTravelRating = findViewById(R.id.textViewRating);
         btnReserve = findViewById(R.id.button);
+
 
         getData();
 
         mapaMP = findViewById(R.id.mapaView);
         mapaMP.onCreate(savedInstanceState);
 
+        //
+        Retrofit retrofit = RetrofitClient.getClient();
+        UserInterface userInterface = retrofit.create(UserInterface.class);
+
         btnReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 reserve();
+            }
+        });
+
+        ImageViewReturn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                onBackPressed();
+            }
+
+        });
+
+
+        //Stars ratingBar
+        ratingStars = findViewById(R.id.ratingBar2);
+        txtTravelRating = findViewById(R.id.textViewRating);
+
+        ratingStars.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                float rating = v;
+                myRating = ratingBar.getRating();
+
+                int rateCount = 0;
+                int numRate = rateCount+1;
+
+                //
+                String rate = String.valueOf(rating);
+                String numRateString = String.valueOf(numRate);
+
+                Map<String, String> params = Map.of("UserCalification", rate, "UserCalifications", numRateString);
+                try {
+                    Call<UserModel> call = userInterface.register(params);
+                    call.enqueue(new retrofit2.Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, retrofit2.Response<UserModel> response) {
+                            UserModel userModel = response.body();
+                                Toast.makeText(DetailsActivity.this, "Su califacion es: "+myRating, Toast.LENGTH_SHORT).show();
+                                txtTravelRating.setText(rate);
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
+                            Toast.makeText(DetailsActivity.this, "Error al registrar calificacion!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }catch (Exception e){
+                    Toast.makeText(DetailsActivity.this, "Error en la calificacion! ", Toast.LENGTH_SHORT).show();
+                }
+
+
+
             }
         });
 
@@ -105,7 +179,7 @@ public class DetailsActivity extends AppCompatActivity {
                                 public void onResponse(Call<UserModel> call, retrofit2.Response<UserModel> response) {
                                     if (response.isSuccessful()) {
                                         UserModel userModel = response.body();
-                                        int UserCalification = Integer.parseInt(userModel.getUserCalification());
+                                        float UserCalification = Float.parseFloat(userModel.getUserCalification());
                                         int UserCalifications = Integer.parseInt(userModel.getUserCalifications());
                                         if(UserCalification == 0) {
                                             txtTravelRating.setText("-");

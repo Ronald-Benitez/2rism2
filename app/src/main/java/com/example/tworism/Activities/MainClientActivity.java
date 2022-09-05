@@ -79,6 +79,8 @@ public class MainClientActivity extends AppCompatActivity {
 
 
         fetchRecentData();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false);
+        recentRecycler.setLayoutManager(layoutManager);
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
