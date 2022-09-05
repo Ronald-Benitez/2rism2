@@ -27,7 +27,7 @@ import retrofit2.Response;
 public class ListarVehiculos extends AppCompatActivity {
 
     ArrayList<String> usuarios = new ArrayList<String>();
-    RecyclerView listUsu;
+    RecyclerView listVehiculos;
     String UserId;
     String UserName, UserVerified;
     Button btnBack;
@@ -41,19 +41,19 @@ public class ListarVehiculos extends AppCompatActivity {
         UserName = bundle.getString("UserName");
         UserVerified = bundle.getString("UserVerified");
 
-        listUsu = findViewById(R.id.listUsuarios);
-        listUsu.setHasFixedSize(true);
-        listUsu.setLayoutManager(new LinearLayoutManager(this));
+        listVehiculos = findViewById(R.id.listVehiculos);
+        listVehiculos.setHasFixedSize(true);
+        listVehiculos.setLayoutManager(new LinearLayoutManager(this));
         btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> {
             back();
         });
 
-        cargarUsuarios();
+        cargarVehiculos();
     }
 
-    public void cargarUsuarios(){
+    public void cargarVehiculos(){
         VehicleInterface api = RetrofitClient.getClient().create(VehicleInterface.class);
         try {
             Call<List<VehicleModel>> call = api.listarVehiculos(UserId);
@@ -62,7 +62,7 @@ public class ListarVehiculos extends AppCompatActivity {
                 public void onResponse(Call<List<VehicleModel>> call, Response<List<VehicleModel>> response) {
                     List<VehicleModel> lista = response.body();
                     VehiclesAdapter adapter = new VehiclesAdapter(lista,UserId,UserName,UserVerified);
-                    listUsu.setAdapter(adapter);
+                    listVehiculos.setAdapter(adapter);
                 }
 
                 @Override
