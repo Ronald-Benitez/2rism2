@@ -61,7 +61,11 @@ public class DetailsActivity extends AppCompatActivity {
         btnReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reserve();
+                Intent intent = new Intent(DetailsActivity.this, PasareraDePagos.class);
+                intent.putExtra("UserId",UserId);
+                intent.putExtra("UserName",UserName);
+                intent.putExtra("TravelId",TravelId);
+                startActivity(intent);
             }
         });
 
@@ -174,34 +178,4 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void reserve(){
-        try{
-            Call<TravelRegister> call = travelInterface.reserveTravel(TravelId,UserId);
-            call.enqueue(new retrofit2.Callback<TravelRegister>() {
-                @Override
-                public void onResponse(Call<TravelRegister> call, retrofit2.Response<TravelRegister> response) {
-                    if(response.isSuccessful()){
-                        TravelRegister travelRegister = response.body();
-                        if(travelRegister!=null){
-                            Toast.makeText(DetailsActivity.this, "Reservado", Toast.LENGTH_SHORT).show();
-                            back();
-                        } else {
-                            Toast.makeText(DetailsActivity.this, "Error al reservar", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(DetailsActivity.this, "Error al reservar", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<TravelRegister> call, Throwable t) {
-                    Toast.makeText(DetailsActivity.this, "Error al reservar", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }catch (Exception e){
-            Toast.makeText(this, "Error al reservar", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-            Log.e("Error",e.getMessage());
-        }
-    }
 }
